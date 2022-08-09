@@ -74,20 +74,16 @@
         <script>
             document.addEventListener("DOMContentLoaded", function(event) 
             {
-                
                 const enemyPosMin = -100;
                 const enemyPassCountMax = 2;
                 const enemyPosDecreasementMax = 20;
-                
                 const playerPosMin = 10;
                 const playerPosMax = 300;
                 const playerPosChange = 5;
-                
                 var enemyPosDecreasement = 5;
                 var enemyPassCount = 0;
                 var enemyPosMax = Math.floor(Math.random() * 2000) + 2000;
                 var enemyPos = enemyPosMax;
-
                 var playerPos = 10;
                 var buttonPressed = false;
                 var playerDirUp = true;

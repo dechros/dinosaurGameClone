@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html body
+            {
+                background-color: wheat;
+                height: 100%;
+                width: 100%;
+            }
+            #playerDiv
+            {
+                background-color: rebeccapurple;
+                font-size: 0px;
+                height: 30px;
+                width: 30px;
+                position: fixed;
+                bottom: 10px;
+                left: 100px;
+            }
+            #enemyDiv
+            {
+                background-color: red;
+                font-size: 0px;
+                height: 100px;
+                width: 30px;
+                position: fixed;
+                bottom: 10px;
+                left: 100px;
+            }
+            #gameOver
+            {
+                visibility: hidden;
+                background-color: black;
+                height: 100%;
+                width: 100%;
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+            }
+            #gameOverText
+            {
+                color: aliceblue;
+                font-size: 50px;
+                position: fixed;
+                bottom: 50%;
+                left: 45%;
+            }
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) 
+            {
+                const enemyPosMax = 2000;
+                const enemyPosMin = -100;
+                const enemyPassCountMax = 3;
+                var enemyPosDecreasementMax = 7;
+                var enemyPosDecreasement = 1;
+                var enemyPassCount = 0;
+                var playerPos = 10;
+                var enemyPos = enemyPosMax;
+                var buttonPressed = false;
+                var playerDirUp = true;
+                window.setInterval(mainTask, 1);
+                window.setInterval(enemyPosCheck, 1);
+                document.addEventListener('keypress', (event) => 
+                {
+                    var name = event.key;
+                    var code = event.code;
+                    if (code == "Space")
+                    {
+                        buttonPressed = true;
+                    }
+                }, false);
+
+                function mainTask()
+                {   
+                    playerPosCheck();
+                    enemyPosCheck();
+                    crossPosCheck();
+                }
+
+                function crossPosCheck()
+                {
+                    if (enemyPos < 100 && enemyPos > 70)
+                    {
+                        if (playerPos < 100)
+                        {
+                            document.getElementById("gameOver").style.visibility = "visible";
+                            document.getElementById("gameOverText").style.visibility = "visible";
+                        }
+                    }
+                }
+
+                function playerPosCheck()
+                {
+                    if (buttonPressed == true)
+                    {
+                        if (playerDirUp == true)
+                        {
+                            playerPos += 10;
+                            document.getElementById("playerDiv").style.bottom = playerPos + "px";
+                        }
+                        else
+                        {
+                            playerPos -= 10;
+                            document.getElementById("playerDiv").style.bottom = playerPos + "px";
+                        }
+                        if (playerPos == 10 || playerPos == 500)
+                        {
+                            playerDirUp = !playerDirUp;
+                            if (playerPos == 10)
+                            {
+                                buttonPressed = false;
+                            }
+                        }
+                    }
+                }
+
+                function enemyPosCheck()
+                {
+                    enemyPos -= enemyPosDecreasement;
+                    document.getElementById("enemyDiv").style.left = enemyPos + "px";
+                    if (enemyPos < enemyPosMin)
+                    {
+                        enemyPos = enemyPosMax;
+                        enemyPassCount++;
+                        if (enemyPassCount >= enemyPassCountMax)
+                        {
+                            enemyPassCount = 0;
+                            enemyPosDecreasement++;
+                            if (enemyPosDecreasement >= enemyPosDecreasementMax)
+                            {
+                                enemyPosDecreasement = enemyPosDecreasementMax;
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <div id = "enemyDiv">
+            0
+        </div>
+        <div id = "playerDiv">
+            0
+        </div>
+        <div id = "gameOver">
+            <p id = "gameOverText">Game Over</p>
+        </div>
+    </body>
+</html>

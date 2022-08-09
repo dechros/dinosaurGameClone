@@ -28,7 +28,7 @@
                 bottom: 10px;
                 left: 100px;
             }
-            #gameOver
+            #gameOverOverlay
             {
                 visibility: hidden;
                 background-color: black;
@@ -43,25 +43,57 @@
                 color: aliceblue;
                 font-size: 50px;
                 position: fixed;
+                bottom: 60%;
+                left: 37%;
+            }
+            #gameOverScoreText
+            {
+                color: aliceblue;
+                font-size: 50px;
+                position: fixed;
+                bottom: 40%;
+                left: 42%;
+            }
+            #hintText
+            {
+                color: black;
+                font-size: 50px;
+                position: fixed;
                 bottom: 50%;
-                left: 45%;
+                left: 37%;
+            }
+            #scoreText
+            {
+                color: black;
+                font-size: 50px;
+                position: fixed;
+                top: 10px;
+                left: 10px;
             }
         </style>
         <script>
             document.addEventListener("DOMContentLoaded", function(event) 
             {
-                const enemyPosMax = 2000;
+                
                 const enemyPosMin = -100;
-                const enemyPassCountMax = 3;
-                var enemyPosDecreasementMax = 7;
-                var enemyPosDecreasement = 1;
+                const enemyPassCountMax = 2;
+                const enemyPosDecreasementMax = 20;
+                
+                const playerPosMin = 10;
+                const playerPosMax = 300;
+                const playerPosChange = 5;
+                
+                var enemyPosDecreasement = 5;
                 var enemyPassCount = 0;
-                var playerPos = 10;
+                var enemyPosMax = Math.floor(Math.random() * 2000) + 2000;
                 var enemyPos = enemyPosMax;
+
+                var playerPos = 10;
                 var buttonPressed = false;
                 var playerDirUp = true;
+                var score = 0;
+                var gameOver = false;
                 window.setInterval(mainTask, 1);
-                window.setInterval(enemyPosCheck, 1);
                 document.addEventListener('keypress', (event) => 
                 {
                     var name = event.key;
@@ -71,23 +103,28 @@
                         buttonPressed = true;
                     }
                 }, false);
-
                 function mainTask()
                 {   
-                    playerPosCheck();
-                    enemyPosCheck();
-                    crossPosCheck();
+                    if (gameOver == false)
+                    {
+                        updateScore();
+                        playerPosCheck();
+                        enemyPosCheck();
+                        crossPosCheck();
+                    }
                 }
-
+                function updateScore()
+                {
+                    score++;
+                    document.getElementById("scoreText").innerHTML = "Score : " + score;
+                }
                 function crossPosCheck()
                 {
-                    if (enemyPos < 100 && enemyPos > 70)
+                    if (enemyPos < 100 && enemyPos > 70 && playerPos < 100)
                     {
-                        if (playerPos < 100)
-                        {
-                            document.getElementById("gameOver").style.visibility = "visible";
-                            document.getElementById("gameOverText").style.visibility = "visible";
-                        }
+                        document.getElementById("gameOverScoreText").innerHTML += score;
+                        document.getElementById("gameOverOverlay").style.visibility = "visible";
+                        gameOver = true;
                     }
                 }
 
@@ -97,15 +134,15 @@
                     {
                         if (playerDirUp == true)
                         {
-                            playerPos += 10;
+                            playerPos += playerPosChange;
                             document.getElementById("playerDiv").style.bottom = playerPos + "px";
                         }
                         else
                         {
-                            playerPos -= 10;
+                            playerPos -= playerPosChange;
                             document.getElementById("playerDiv").style.bottom = playerPos + "px";
                         }
-                        if (playerPos == 10 || playerPos == 500)
+                        if (playerPos <= playerPosMin || playerPos >= playerPosMax)
                         {
                             playerDirUp = !playerDirUp;
                             if (playerPos == 10)
@@ -122,6 +159,7 @@
                     document.getElementById("enemyDiv").style.left = enemyPos + "px";
                     if (enemyPos < enemyPosMin)
                     {
+                        enemyPosMax = Math.floor(Math.random() * 2000) + 2000;
                         enemyPos = enemyPosMax;
                         enemyPassCount++;
                         if (enemyPassCount >= enemyPassCountMax)
@@ -139,14 +177,17 @@
         </script>
     </head>
     <body>
+        <p id = "scoreText">Score : </p>
+        <p id = "hintText">Press "Space" to jump.</p>
         <div id = "enemyDiv">
             0
         </div>
         <div id = "playerDiv">
             0
         </div>
-        <div id = "gameOver">
-            <p id = "gameOverText">Game Over</p>
+        <div id = "gameOverOverlay">
+            <p id = "gameOverText">Game Over Press F5</p>
+            <p id = "gameOverScoreText">Score : </p>
         </div>
     </body>
 </html>
